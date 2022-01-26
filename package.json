@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "jimp": "^0.16.1"
+    "commander": "8.3.0",
+    "jimp": "0.16.1"
   }
 }

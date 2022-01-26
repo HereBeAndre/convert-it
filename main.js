@@ -1,22 +1,33 @@
 import Jimp from 'jimp';
+import { Command } from 'commander/esm.mjs';
 
-const imageConverter = (filePath, extenstion = 'jpg') => {
-  Jimp.read(filePath, (err, data) => {
-    if (err) {
-      throw err;
-    } else {
-      const indexOfLastSlash = filePath.lastIndexOf('/');
-      const indexOfLastDot = filePath.lastIndexOf('.');
-      const newFilename = filePath.substring(indexOfLastSlash, indexOfLastDot);
+const program = new Command();
+
+const imageConverter = async (pathname, extenstion) => {
+  await Jimp.read(pathname, (err, data) => {
+    try {
+      const indexOfLastSlash = pathname.lastIndexOf('/');
+      const indexOfLastDot = pathname.lastIndexOf('.');
+      const newFilename = pathname.substring(indexOfLastSlash, indexOfLastDot);
       data
         .resize(180, 180)
         .background(0xffffffff)
         .quality(60)
         .write(`./converted-images/${newFilename}.${extenstion}`);
+      console.log('File converted successfully');
+    } catch (err) {
+      console.log('Something went wrong');
     }
   });
 };
 
-// Pass relative path of file that you want to convert - convereted images are inside converted-images folder
-// imageConverter('./images/google_logo.png');
-imageConverter('d3-logo.png');
+program
+  .command('convert')
+  .description('Convert input image file into desired image file - default is JPG')
+  .alias('c')
+  .argument('<filePathname>', 'Relative path to file')
+  .argument('[extension]', 'Desired extension different than jpg', 'jpg')
+  .action((filePathname, extension) => imageConverter(filePathname, extension));
+
+// Following line actually runs the program
+program.parse(process.argv);
