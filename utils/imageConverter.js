@@ -1,7 +1,7 @@
 import Jimp from 'jimp';
 import { chalkLogger } from './chalkLogger.js';
 
-export const imageConverter = async (pathname, extenstion) => {
+export const imageConverter = async (pathname, extenstion /* default is jpg */) => {
   await Jimp.read(pathname, (err, data) => {
     try {
       const indexOfLastSlash = pathname.lastIndexOf('/');
@@ -12,9 +12,9 @@ export const imageConverter = async (pathname, extenstion) => {
         .background(0xffffffff)
         .quality(60)
         .write(`./converted-images/${newFilename}.${extenstion}`);
-      chalkLogger('File converted successfully', 'bgGreenBright');
+      chalkLogger('File converted successfully', 'greenBright');
     } catch (err) {
-      chalkLogger("Couldn't convert the file", 'bgRedBright');
+      chalkLogger("Couldn't convert the file", 'redBright');
       console.log(err);
     }
   });
